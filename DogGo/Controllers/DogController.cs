@@ -2,118 +2,121 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DogGo.Models;
+using DogGo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using DogGo.Repositories;
-using DogGo.Models;
+
 
 namespace DogGo.Controllers
 {
-    public class OwnerController : Controller
+    public class DogController : Controller
     {
-        private readonly IOwnerRepository _ownerRepo;
+
+        private readonly IDogRepository _dogRepo;
 
 
         // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
-        public OwnerController(IOwnerRepository ownerRepository)
-        //_ownerRepo is receipe box
+        public DogController(IDogRepository dogRepository)
+        //_dogRepo is receipe box (private)
         {
-            _ownerRepo = ownerRepository;
+            _dogRepo = dogRepository;
         }
-        // GET: OwnerController
+        // GET: DogController
         public ActionResult Index()
         {
-            List<Owner> owners = _ownerRepo.GetAllOwners();
-            return View(owners);
+            List<Dog> dogs = _dogRepo.GetAllDogs();
+
+            return View(dogs);
         }
 
-        // GET: OwnerController/Details/5
+        // GET: DogController/Details/5
         public ActionResult Details(int id)
         {
-            Owner owner = _ownerRepo.GetOwnerById(id);
+            Dog dog = _dogRepo.GetDogById(id);
 
-            if (owner == null)
+            if (dog == null)
             {
                 return NotFound();
             }
 
-            return View(owner);
+            return View(dog);
         }
 
-        // GET: OwnerController/Create
+
+        // GET: DogController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: OwnerController/Create
+        // POST: DogController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Owner owner)
+        public ActionResult Create(Dog dog)
         {
             try
             {
-                _ownerRepo.AddOwner(owner);
-
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch
             {
-                return View(owner);
+                return View(dog);
             }
         }
 
-        // GET: OwnerController/Edit/5
+        // GET: DogController/Edit/5
         public ActionResult Edit(int id)
         {
-            Owner owner = _ownerRepo.GetOwnerById(id);
+            Dog dog = _dogRepo.GetDogById(id);
 
-            if (owner == null)
+            if (dog == null)
             {
                 return NotFound();
             }
 
-            return View(owner);
+            return View(dog);
         }
 
-        // POST: OwnerController/Edit/5
+        // POST: DogController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Owner owner)
+        public ActionResult Edit(int id, Dog dog)
         {
             try
             {
-                _ownerRepo.UpdateOwner(owner);
+                _dogRepo.UpdateDog(dog);
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return View(owner);
+                return View(dog);
             }
         }
 
-        // GET: OwnerController/Delete/5
+        // GET: DogController/Delete/5
         public ActionResult Delete(int id)
         {
-            Owner owner = _ownerRepo.GetOwnerById(id);
-            return View(owner);
+            Dog dog = _dogRepo.GetDogById(id);
+            return View(dog);
         }
 
-        // POST: OwnerController/Delete/5
+
+        // POST: DogController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Owner owner)
+        public ActionResult Delete(int id, Dog dog)
         {
             try
             {
-                _ownerRepo.DeleteOwner(id);
+                _dogRepo.DeleteDog(id);
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return View(owner);
+                return View(dog);
             }
         }
     }

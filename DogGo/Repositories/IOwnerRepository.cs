@@ -9,6 +9,14 @@ namespace DogGo.Repositories
     public interface IOwnerRepository
     {
         List<Owner> GetAllOwners();
-        Owner GetOwnerById(int id);
+       Owner GetOwnerById(int id);
+        //Why is CRUD void, and why do we Owner in front of Email?
+        //
+        public void AddOwner(Owner owner);
+        public void UpdateOwner(Owner owner);
+
+        public void DeleteOwner(int ownerId);
+
+        public Owner GetOwnerByEmail(string email);
     }
 }
