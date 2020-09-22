@@ -31,6 +31,8 @@ namespace DogGo
             services.AddTransient<IOwnerRepository, OwnerRepository>();
             services.AddTransient<IDogRepository, DogRepository>();
             services.AddTransient<INeighborhoodRepository, NeighborhoodRepository>();
+            services.AddTransient<IWalksRepository, WalksRepository>();
+                
 
         }
 
@@ -59,6 +61,8 @@ namespace DogGo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //Remember in Browser you can do localhost:5001/Waler/Details/1 to display specific data.
             });
         }
     }
