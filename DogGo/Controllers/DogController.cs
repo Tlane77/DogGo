@@ -59,7 +59,7 @@ namespace DogGo.Controllers
             {
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception)
             {
                 return View(dog);
             }
@@ -81,7 +81,7 @@ namespace DogGo.Controllers
         // POST: DogController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Dog dog)
+        public ActionResult Edit (Dog dog)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace DogGo.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(dog);
             }
@@ -114,7 +114,7 @@ namespace DogGo.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return View(dog);
             }

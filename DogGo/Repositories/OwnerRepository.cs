@@ -160,9 +160,11 @@ namespace DogGo.Repositories
                     cmd.Parameters.AddWithValue("@phoneNumber", owner.Phone);
                     cmd.Parameters.AddWithValue("@neighborhoodId", owner.NeighborhoodId);
 
-                    int id = (int)cmd.ExecuteScalar();
+                    //int id = (int)cmd.ExecuteScalar();
 
-                    owner.Id = id;
+                    //owner.Id = id;
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
