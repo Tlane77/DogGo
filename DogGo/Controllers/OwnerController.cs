@@ -8,6 +8,9 @@ using DogGo.Repositories;
 using DogGo.Models;
 using Microsoft.Extensions.Configuration;
 using DogGo.Models.ViewModels;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DogGo.Controllers
 {
@@ -92,14 +95,19 @@ namespace DogGo.Controllers
         // GET: OwnerController/Edit/5
         public ActionResult Edit(int id)
         {
-            Owner owner = _ownerRepo.GetOwnerById(id);
-
-            if (owner == null)
+            List<Neighborhood> neighborhoods = _neighborhoodRepo.GetAll();
+            OwnerFormViewModel vm = new OwnerFormViewModel()
+            {
+                Owner = _ownerRepo.GetOwnerById(id),
+                Neighborhoods = neighborhoods
+            };
+            if (vm.Owner == null)
             {
                 return NotFound();
             }
+            return View(vm);
 
-            return View(owner);
+           
         }
 
         // POST: OwnerController/Edit/5
@@ -109,6 +117,7 @@ namespace DogGo.Controllers
         {
             try
             {
+                owner.Id = id;
                 _ownerRepo.UpdateOwner(owner);
 
                 return RedirectToAction("Index");
@@ -142,5 +151,48 @@ namespace DogGo.Controllers
                 return View(owner);
             }
         }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginViewModel viewModel)
+        {
+            Owner owner = _ownerRepo.GetOwnerByEmail(viewModel.Email);
+
+            if (owner == null)
+            {
+                return Unauthorized();
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, owner.Id.ToString()),
+                new Claim(ClaimTypes.Email, owner.Email),
+                new Claim(ClaimTypes.Role, "DogOwner"),
+                new Claim("FavColor", "Blue"),
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            return RedirectToAction("Index", "Dogs");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
+
+
+    
+
